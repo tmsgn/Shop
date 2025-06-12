@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import Card from "./components/card";
-
+import { products } from "@/utils/data";
 const Home = () => {
   return (
     <div className="w-full p-4 md:p-8">
@@ -33,10 +33,21 @@ const Home = () => {
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           Featured Products
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <Card key={i} />
-          ))}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2">
+        {products.map((product) => (
+          <Card
+            key={product.id}
+            id={product.id}
+            name={product.name}
+            description={product.description}
+            price={product.price}
+            brand={product.brand}
+            category={product.category}
+            inStock={product.inStock}
+            src={product.images[0]?.image }
+            rating= {product.rating}
+          />
+        ))}
         </div>
       </section>
     </div>

@@ -1,52 +1,82 @@
 "use client";
-import React from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
 
-const Card = () => {
-    const router = useRouter();
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+
+interface CardProps {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  brand: string;
+  category: string;
+  inStock: boolean;
+  src: string;
+  rating: number;
+}
+
+const Card = (props: CardProps) => {
+  const renderStars = (rating: number) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <svg
+          key={i}
+          className={`w-4 h-4 inline ${i <= Math.round(rating) ? 'text-yellow-400' : 'text-gray-300'}`}
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="..." />
+        </svg>
+      );
+    }
+    return stars;
+  };
+
   return (
-    <div
-    onClick={() => router.push(`/product/Wireless-Bluetooth-5.0-Headphone`)}
-    className="bg-white cursor-pointer border border-gray-200 rounded-xl p-4 flex flex-col items-center space-y-3 hover:shadow-xl transition group relative">
-    <div className="relative">
-      <Image
-        src="/headphone.png"
-        alt="Product"
-        width={180}
-        height={180}
-        className="object-contain group-hover:scale-110 group-hover:rotate-3  transition-transform duration-300 ease-out rounded"
-      />
-    </div>
-
-      <div className="w-full text-center">
-        <h3 className="text-sm font-semibold text-gray-800 truncate">
-          Wireless Bluetooth 5.0 Headphone
-        </h3>
-
-        <div className="flex items-center justify-center gap-2 mt-1">
-          <span className="text-md font-bold text-black">ETB194.24</span>
-          <span className="text-sm line-through text-gray-400">ETB389.98</span>
+    <Link href={`/product/${props.id}`} className="group">
+      <div className="w-56 h-90 justify-between cursor-pointer bg-white rounded-lg shadow-md p-4 flex flex-col items-center transition-transform hover:scale-105 relative">
+        <div className="w-full flex items-center justify-center mb-3">
+          <Image
+            src={props.src}
+            alt={props.name}
+            width={120}
+            height={120}
+            className="object-cover transition-transform duration-300 group-hover:rotate-5"
+          />
         </div>
-
-        <div className="flex items-center justify-center gap-2 text-gray-500 text-sm mt-1">
-          <span>★ 3.5</span>
-          <span>|</span>
-          <span>900+ sold</span>
+        <div className="w-full flex flex-col items-start">
+          <h1 className="font-semibold text-lg truncate w-full">{props.name}</h1>
+          <p className="text-gray-500 text-xs mb-1">{props.brand} • {props.category}</p>
+          <div className="flex items-center mb-1">
+            {renderStars(props.rating)}
+            <span className="ml-2 text-xs text-gray-500">{props.rating}</span>
+          </div>
+          <p className="text-gray-700 text-sm line-clamp-2 mb-2">{props.description}</p>
+          <div className="flex items-center justify-between w-full mt-auto">
+            <span className="font-bold text-green-600 text-base">${props.price.toFixed(2)}</span>
+            <span className={`text-xs px-2 py-1 rounded ${props.inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+              {props.inStock ? 'In Stock' : 'Out of Stock'}
+            </span>
+          </div>
+        </div>
+        <div className="flex mt-1 z-20 justify-center gap-2 pointer-events-none group-hover:pointer-events-auto transition-opacity duration-200">
+          <button
+            className="bg-blue-600 cursor-pointer text-white text-xs px-3 py-1 rounded shadow hover:bg-blue-700 transition-colors"
+            disabled={!props.inStock}
+          >
+            Add to Cart
+          </button>
+          <button
+            className="bg-yellow-500 cursor-pointer text-white text-xs px-3 py-1 rounded shadow hover:bg-yellow-600 transition-colors"
+            disabled={!props.inStock}
+          >
+            Buy Now
+          </button>
         </div>
       </div>
-
-      {/* Side-by-side buttons */}
-      <div className="flex justify-between items-center w-full gap-2 mt-2">
-        <button className="flex-1 cursor-pointer bg-blue-600 text-white font-medium rounded-full py-2 text-sm hover:bg-blue-700 transition">
-          Add to Cart
-        </button>
-
-        <button className="flex-1 border border-gray-400 text-sm text-blue-600 font-medium rounded-full py-2 cursor-pointer hover:bg-gray-200 transition">
-          Buy now
-        </button>
-      </div>
-    </div>
+    </Link>
   );
 };
 
